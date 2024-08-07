@@ -10,6 +10,7 @@
         ICustomerRepository Customer { get; }
         IOrderRepository Order { get; }
         IOrderDetailRepository OrderDetail { get; }
+        IWishlistRepository Wishlist { get; }
         
         int Save();
     }

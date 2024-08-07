@@ -23,6 +23,7 @@ namespace MobilApp.DataAccess.Implementation
             Customer = new CustomerRepository(_carcontext);
             Order =new OrderRepository(_carcontext);
             OrderDetail = new OrderDetailRepository(_carcontext);
+            Wishlist =new WishlistRepository(_carcontext);
         }
 
         public IUserRepository User { get;private set; }
@@ -33,6 +34,7 @@ namespace MobilApp.DataAccess.Implementation
         public ICustomerRepository Customer { get; private set; }
         public IOrderRepository Order { get; private set; }
         public IOrderDetailRepository OrderDetail { get; private set; }
+        public IWishlistRepository Wishlist { get; private set; }
         public int Save()
         {
             return _carcontext.SaveChanges();
