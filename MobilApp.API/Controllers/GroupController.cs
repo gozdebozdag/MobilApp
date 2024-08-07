@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MobilApp.API.Services;
+using MobilApp.DataAccess.Context;
 using MobilApp.Entities;
+using MobilApp.Repository;
 
 namespace MobilApp.API.Controllers
 {
@@ -8,40 +10,58 @@ namespace MobilApp.API.Controllers
    [ApiController]
     public class GroupController : ControllerBase
      {
-            private readonly GroupService _service;
+        private readonly MobilAppDbContext _context;
+        private readonly IConfiguration _configuration;
+        private readonly IUnitOfWork _unitOfWork;
 
-            public GroupController(GroupService service)
-            {
-                _service = service;
-            }
+        public GroupController(MobilAppDbContext context, IConfiguration configuration, IUnitOfWork unitOfWork)
+        {
+            _context = context;
+            _configuration = configuration;
+            _unitOfWork = unitOfWork;
+        }
 
-            [HttpGet]
-            public IActionResult GetAll()
-            {
-                var groups = _service.GetAllGroups();
-                return Ok(groups);
-            }
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            var groups = _unitOfWork.Group.GetAll();
+            return Ok(groups);
+        }
 
-            [HttpGet("{id}")]
-            public IActionResult GetById(int id)
+        [HttpGet("{id}")]
+        public IActionResult GetById(int id)
+        {
+            var groups = _unitOfWork.Group.GetById(id);
+            if (groups == null)
             {
-                var group = _service.GetGroupById(id);
-                if (group == null)
-                {
-                    return NotFound();
-                }
-                return Ok(group);
+                return NotFound();
             }
+            return Ok(groups);
+        }
 
-            [HttpPost]
-            public IActionResult Add([FromBody] Groups group)
+        [HttpPost]
+        public IActionResult Add([FromBody] Groups group)
+        {
+            if (group == null)
             {
-                if (group == null)
-                {
-                    return BadRequest();
-                }
-                _service.AddGroup(group);
-                return Ok(new { message = "Group added successfully" });
+                return BadRequest();
             }
-     }
+            _unitOfWork.Group.Add(group);
+            _unitOfWork.Save();
+            return Ok(new { message = "Group added successfully" });
+        }
+
+        [HttpPut]
+        public IActionResult Update([FromBody] Groups group)
+        {
+            if (group == null)
+            {
+                return BadRequest();
+            }
+            var groups = _unitOfWork.Group.GetById(group.GroupId);
+            groups.GroupName = group.GroupName;
+            _unitOfWork.Save();
+            return Ok(new { message = "Group updated successfully" });
+        }
+    }
 }

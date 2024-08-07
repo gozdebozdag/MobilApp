@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MobilApp.API.Services;
+using MobilApp.DataAccess.Context;
 using MobilApp.Entities;
+using MobilApp.Repository;
 
 namespace MobilApp.API.Controllers
 {
@@ -8,24 +10,28 @@ namespace MobilApp.API.Controllers
     [ApiController]
     public class BrandController : ControllerBase
     {
-        private readonly BrandService _service;
+        private readonly MobilAppDbContext _context;
+        private readonly IConfiguration _configuration;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public BrandController(BrandService service)
+        public BrandController( MobilAppDbContext context, IConfiguration configuration, IUnitOfWork unitOfWork)
         {
-            _service = service;
+            _context = context;
+            _configuration = configuration;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpGet]
         public IActionResult GetAll()
         {
-            var brands = _service.GetAllBrands();
+            var brands = _unitOfWork.Brand.GetAll();
             return Ok(brands);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            var brands = _service.GetBrandsById(id);
+            var brands = _unitOfWork.Brand.GetById(id);
             if (brands == null)
             {
                 return NotFound();
@@ -40,7 +46,8 @@ namespace MobilApp.API.Controllers
             {
                 return BadRequest();
             }
-            _service.AddBrand(brand);
+            _unitOfWork.Brand.Add(brand);
+            _unitOfWork.Save();
             return Ok(new { message = "Brand added successfully" });
         }
 
@@ -51,7 +58,9 @@ namespace MobilApp.API.Controllers
             {
                 return BadRequest();
             }
-            _service.AddBrand(brand);
+            var brands = _unitOfWork.Brand.GetById(brand.BrandId);
+            brands.Brand = brand.Brand;
+            _unitOfWork.Save();
             return Ok(new { message = "Brand updated successfully" });
         }
     }
