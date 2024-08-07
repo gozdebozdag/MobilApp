@@ -8,6 +8,9 @@
         IBrandRepository Brand { get; }
         ICategoryRepository Category { get; }
         ICustomerRepository Customer { get; }
+        IOrderRepository Order { get; }
+        IOrderDetailRepository OrderDetail { get; }
+        
         int Save();
     }
 }

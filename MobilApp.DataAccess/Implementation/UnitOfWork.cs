@@ -1,4 +1,5 @@
 ﻿using MobilApp.DataAccess.Context;
+using MobilApp.Entities;
 using MobilApp.Repository;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,8 @@ namespace MobilApp.DataAccess.Implementation
             Category = new CategoryRepository(_carcontext);
             Brand = new BrandRepository(_carcontext);
             Customer = new CustomerRepository(_carcontext);
+            Order =new OrderRepository(_carcontext);
+            OrderDetail = new OrderDetailRepository(_carcontext);
         }
 
         public IUserRepository User { get;private set; }
@@ -28,6 +31,8 @@ namespace MobilApp.DataAccess.Implementation
         public ICategoryRepository Category { get; private set; }
         public IBrandRepository Brand { get; private set; }
         public ICustomerRepository Customer { get; private set; }
+        public IOrderRepository Order { get; private set; }
+        public IOrderDetailRepository OrderDetail { get; private set; }
         public int Save()
         {
             return _carcontext.SaveChanges();

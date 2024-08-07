@@ -17,6 +17,8 @@ namespace MobilApp.DataAccess.Context
         public DbSet<Groups> Groups { get; set; }
         public DbSet<Categories> Categories { get; set; }
         public DbSet<Customer> Customer { get; set; }
+        public DbSet<Order> Order { get; set; }
+        public DbSet<OrderDetail> OrderDetail { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -31,6 +31,10 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ProductRepository>();
 builder.Services.AddScoped<IBrandRepository,BrandRepository>();
 builder.Services.AddScoped<BrandRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<OrderRepository>();
+builder.Services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
+builder.Services.AddScoped<OrderDetailRepository>();
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
